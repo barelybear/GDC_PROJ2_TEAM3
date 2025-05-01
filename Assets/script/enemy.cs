@@ -33,4 +33,5 @@ public class Enemy : Entity
     {
         Debug.Log($"{gameObject.name} attacks!");
     }
+    protected virtual void UpdateAnimationParameters() { }
 }

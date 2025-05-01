@@ -198,16 +198,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b693d9bd4f0f9e4aac9eadd8904e1b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  health: 100
-  damage: 10
+  speed: 2.5
+  health: 6
+  damage: 0
   hitted: 0
   player: {fileID: 0}
   detectionRange: 5
-  castCooldown: 2
-  fleeDistance: 2
-  jumpForce: 5
-  castCooldown: 2
+  castCooldown: 16
+  jumpForce: 7
   groundMask:
     serializedVersion: 2
     m_Bits: 0

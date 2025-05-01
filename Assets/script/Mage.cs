@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class Mage : Enemy
 {
-    public float fleeDistance = 2f;
     public float jumpForce = 5f;
-    public float castCooldown = 2f;
     public LayerMask groundMask;
 
     private Rigidbody2D rb;
     private bool isGrounded = false;
     private float castTimer = 0f;
-
+    private Animator animator;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -19,6 +17,7 @@ public class Mage : Enemy
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null) player = playerObj.transform;
         }
+        animator = GetComponent<Animator>();
     }
 
     protected override void Update()
@@ -29,38 +28,36 @@ public class Mage : Enemy
 
     protected override void MoveAI(float distanceToPlayer)
     {
-        if (distanceToPlayer < fleeDistance)
+        if (distanceToPlayer < detectionRange)
         {
+            animator.SetFloat("speed", 1);
             Vector2 away = (transform.position - player.position).normalized;
-
-            // If grounded and close, jump away
             if (isGrounded)
             {
                 Vector2 jumpDir = new Vector2(away.x, 1).normalized;
-                rb.velocity = Vector2.zero;
+                rb.linearVelocity = Vector2.zero;
                 rb.AddForce(jumpDir * jumpForce, ForceMode2D.Impulse);
             }
             else
             {
-                // If in air or can't jump, just flee horizontally
-                rb.velocity = new Vector2(away.x * speed, rb.velocity.y);
+                rb.linearVelocity = new Vector2(away.x * speed, rb.linearVelocity.y);
             }
-
             Flip(away.x);
-
-            // Try to attack
             if (castTimer <= 0f)
             {
                 Attack();
                 castTimer = castCooldown;
             }
         }
+        else animator.SetFloat("speed", 0);
     }
 
     public override void Attack()
     {
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        if (distanceToPlayer > detectionRange) return;
         Debug.Log("Mage casts fireball!");
-        // TODO: Instantiate fireball prefab, add logic here
+        animator.SetTrigger("cast");
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -92,5 +89,14 @@ public class Mage : Enemy
         scale.x = Mathf.Abs(scale.x) * (direction < 0 ? -1 : 1);
         transform.localScale = scale;
     }
+    protected override void UpdateAnimationParameters()
+    {
+        animator.SetFloat("health", health);
 
+    }
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+        animator.SetTrigger("hit");
+    }
 }

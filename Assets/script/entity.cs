@@ -13,7 +13,6 @@ public class Entity : MonoBehaviour
 
     public virtual void TakeDamage(float amount)
     {
-        hit();
         health -= amount;
         if (health <= 0)
         {
@@ -23,12 +22,5 @@ public class Entity : MonoBehaviour
     protected virtual void Die()
     {
         Destroy(gameObject);
-    }
-
-    public void hit()
-    {
-        hitted = true;
-        //Some logic
-        hitted = false;
     }
 }

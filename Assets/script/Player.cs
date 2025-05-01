@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : Entity
@@ -7,18 +8,22 @@ public class Player : Entity
     private Rigidbody2D rb;
     private bool isGrounded = true;
 
-    public float verticalSpeed => rb.velocity.y;
+    public float verticalSpeed => rb.linearVelocity.y;
     private SpriteRenderer spriteRenderer;
+    private Animator animator;
+
     private int spacePressCount = 0;
     private float comboTimer = 0f;
     public float comboWindow = 0.5f;
     public float attackCooldown = 1f;
     private float lastAttackTime = -10f;
-    public GameObject attackHitbox;
+    [SerializeField] private GameObject attackHitboxPrefab;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -26,6 +31,7 @@ public class Player : Entity
         HandleMovement();
         HandleJump();
         HandleAttack();
+        UpdateAnimationParameters();
     }
 
     void HandleMovement()
@@ -43,7 +49,7 @@ public class Player : Entity
     {
         if (Input.GetKeyDown(KeyCode.W) && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
     }
 
@@ -69,7 +75,6 @@ public class Player : Entity
             }
         }
 
-
         if (comboTimer > 0)
         {
             comboTimer -= Time.deltaTime;
@@ -89,34 +94,39 @@ public class Player : Entity
     void NormalAttack()
     {
         Debug.Log("Normal attack!");
-        TriggerHitbox(damage);
+        animator.SetTrigger("attack");
+        StartCoroutine(TriggerHitbox(damage, 1));
     }
 
     void ComboAttack()
     {
-        Debug.Log("COMBO attack!");
-        TriggerHitbox(damage * 2); // Example: more damage
+        animator.SetTrigger("attack2");
+        StartCoroutine(TriggerHitbox(damage, 2));
         lastAttackTime = Time.time;
     }
 
-    void TriggerHitbox(float dmg)
+    IEnumerator TriggerHitbox(float dmg, int count)
     {
-        if (attackHitbox == null) return;
+        float spacing = 0.5f;
+        int direction = spriteRenderer.flipX ? -1 : 1;
 
-        playerAttaclBox hitboxScript = attackHitbox.GetComponent<playerAttaclBox>();
-        hitboxScript.damage = dmg;
-        attackHitbox.SetActive(true);
-        Invoke(nameof(DisableHitbox), 0.2f); // Hitbox active for 0.2 seconds
-    }
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 offset = new Vector3((0.6f + i * spacing) * direction, 0, 0);
+            Vector3 spawnPos = transform.position + offset;
 
-    void DisableHitbox()
-    {
-        attackHitbox.SetActive(false);
+            GameObject hb = Instantiate(attackHitboxPrefab, spawnPos, Quaternion.identity);
+            hb.transform.localScale = new Vector3(direction, 1, 1);
+
+            hitBox script = hb.GetComponent<hitBox>();
+            script.Init(dmg, tag);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     public override void Move(Vector2 direction)
     {
-        rb.velocity = new Vector2(direction.x * speed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(direction.x * speed, rb.linearVelocity.y);
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -140,5 +150,18 @@ public class Player : Entity
         {
             isGrounded = false;
         }
+    }
+
+    void UpdateAnimationParameters()
+    {
+        animator.SetFloat("speed", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetFloat("speedV", rb.linearVelocity.y);
+        animator.SetBool("isGround", isGrounded);
+        animator.SetFloat("health", health);
+    }
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+        animator.SetTrigger("hit");
     }
 }

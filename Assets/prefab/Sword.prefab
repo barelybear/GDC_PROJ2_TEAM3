@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 8094359118723090557}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.179, y: 0.007, z: 0}
+  m_LocalPosition: {x: 14.83, y: 6.51, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -102,7 +102,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8ab511e70fb3be44091f58b362844e33, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -198,11 +198,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee062382578c094683dd3e615d20bb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  health: 100
-  damage: 10
+  speed: 3
+  health: 5
+  damage: 1
   hitted: 0
-  player: {fileID: 0}
+  player: {fileID: 2026412495209027525, guid: 0efb7a00dfe15f0458e4d1e8ccc4505e, type: 3}
   detectionRange: 5
-  castCooldown: 2
+  castCooldown: 6
   chargeSpeed: 12
+  attackRange: 2
+  attackCooldown: 6
+  attackHitboxPrefab: {fileID: 3685896866217232579, guid: 0efb7a00dfe15f0458e4d1e8ccc4505e, type: 3}
