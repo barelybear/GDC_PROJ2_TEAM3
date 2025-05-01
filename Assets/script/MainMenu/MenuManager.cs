@@ -4,10 +4,10 @@ using UnityEngine.UI;
 public class MenuManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [SerializeField] Button startButton;
-    [SerializeField] Button guideButton;
-    [SerializeField] GameObject GuidePanel;
-    [SerializeField] Button continueButton;
+    [SerializeField] private Button startButton;
+    [SerializeField]  private Button guideButton;
+    [SerializeField] private GameObject GuidePanel;
+    [SerializeField] private Button continueButton;
     void Start()
     {
         startButton.onClick.AddListener(StartGame);
