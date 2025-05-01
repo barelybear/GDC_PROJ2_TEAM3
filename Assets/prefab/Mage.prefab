@@ -209,3 +209,6 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 0
+  offsetMin: -2
+  offsetMax: 2
+  minions: {fileID: 8094359118723090557, guid: a80d5c8acf764484f9d576aa4913c39b, type: 3}

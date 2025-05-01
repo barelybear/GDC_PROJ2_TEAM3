@@ -3,12 +3,13 @@ using UnityEngine;
 public class Mage : Enemy
 {
     public float jumpForce = 5f;
-    public LayerMask groundMask;
-
     private Rigidbody2D rb;
     private bool isGrounded = false;
     private float castTimer = 0f;
     private Animator animator;
+    public float offsetMin = -2f;
+    public float offsetMax = 2f;
+    public GameObject minions;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -56,8 +57,14 @@ public class Mage : Enemy
     {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer > detectionRange) return;
-        Debug.Log("Mage casts fireball!");
         animator.SetTrigger("cast");
+        int numberOfObjects = Random.Range(1, 5);
+
+        for (int i = 0; i < numberOfObjects; i++) { 
+            float randomOffset = Random.Range(offsetMin, offsetMax);
+            Vector3 spawnPosition = transform.position + new Vector3(randomOffset, 10, 0);
+            Instantiate(minions, spawnPosition, Quaternion.identity);
+        }
     }
 
     void OnCollisionStay2D(Collision2D collision)

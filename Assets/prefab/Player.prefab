@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7695510379062314404}
   - component: {fileID: 8530023085098178830}
   - component: {fileID: 8690801403840863886}
+  - component: {fileID: 8986148456783317547}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -206,3 +207,23 @@ MonoBehaviour:
   comboWindow: 0.5
   attackCooldown: 0.6
   attackHitboxPrefab: {fileID: 7227467690564433093, guid: a6e4c12ff9380554db75af9af8cea8c3, type: 3}
+--- !u!114 &8986148456783317547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568605887259255137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48a2fc168da0a4c4faefda9062105584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 4
+  health: 100
+  damage: 10
+  hitted: 0
+  jumpForce: 3.5
+  comboWindow: 0.5
+  attackCooldown: 1
+  attackHitboxPrefab: {fileID: 0}
