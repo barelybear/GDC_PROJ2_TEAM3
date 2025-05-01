@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 8094359118723090557}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.83, y: 6.51, z: 0}
+  m_LocalPosition: {x: 1.394618, y: 1.2246988, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -202,7 +202,7 @@ MonoBehaviour:
   health: 5
   damage: 1
   hitted: 0
-  player: {fileID: 2026412495209027525, guid: 0efb7a00dfe15f0458e4d1e8ccc4505e, type: 3}
+  player: {fileID: 0}
   detectionRange: 5
   castCooldown: 6
   chargeSpeed: 12

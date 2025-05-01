@@ -8,8 +8,9 @@ public class Sword : Enemy
     private Rigidbody2D rb;
     public float attackCooldown = 2f;
     private float attackTimer = 0f;
-    private SpriteRenderer spriteRenderer;
+    private object spriteRenderer;
     public GameObject attackHitboxPrefab;
+    
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -60,13 +61,9 @@ public class Sword : Enemy
     }
     IEnumerator TriggerHitbox(float dmg, int count)
     {
-        float spacing = 0.5f;
-        int direction = spriteRenderer.flipX ? -1 : 1;
-
         for (int i = 0; i < count; i++)
         {
             GameObject hb = Instantiate(attackHitboxPrefab, transform.position, Quaternion.identity);
-            hb.transform.localScale = new Vector3(direction, 1, 1);
 
             hitBox script = hb.GetComponent<hitBox>();
             script.Init(dmg, tag);
@@ -85,6 +82,6 @@ public class Sword : Enemy
     }
     protected override void Die()
     {
-        Destroy(gameObject, 6);
+        Destroy(gameObject);
     }
 }
