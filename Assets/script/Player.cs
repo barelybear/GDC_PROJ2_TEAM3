@@ -1,5 +1,9 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro; 
 
 public class Player : Entity
 {
@@ -18,12 +22,26 @@ public class Player : Entity
     public float attackCooldown = 1f;
     private float lastAttackTime = -10f;
     [SerializeField] private GameObject attackHitboxPrefab;
+    [SerializeField] private Slider HealthBar;
+    [SerializeField] private GameObject GameOverPanel;
+    [SerializeField]private Button MenuButton;
+    [SerializeField]private Button RestartButton;
 
+    void Awake()
+    {
+        onHealthChanged += UpdateHealthUI;
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        GameOverPanel.SetActive(false);
+        HealthBar.maxValue = health;
+        HealthBar.value = health;
+        MenuButton.onClick.AddListener(ReturnMenu);
+        RestartButton.onClick.AddListener(RestartGame);
+
     }
 
     void Update()
@@ -163,5 +181,39 @@ public class Player : Entity
     {
         base.TakeDamage(damage);
         animator.SetTrigger("hit");
+    }
+
+    protected override void Die()
+    {
+        // hiện panel Game Over
+        GameOverPanel.SetActive(true);
+
+        // khóa input và dừng game
+        this.enabled     = false;
+        Time.timeScale   = 0f;
+    }
+
+    void UpdateHealthUI(float newHealth)
+    {
+        HealthBar.value = newHealth;
+    }
+
+    void OnDestroy()
+    {
+        onHealthChanged -= UpdateHealthUI;
+    }
+
+    public void ReturnMenu()
+    {
+        Time.timeScale = 1; // Resume the game
+        GameOverPanel.SetActive(false); // Hide the pause menu
+        SceneManager.LoadScene("Menu"); // Load the main menu scene
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1; // Resume the game
+        GameOverPanel.SetActive(false); // Hide the pause menu
+        SceneManager.LoadScene("GameScene"); // Restart the game scene
     }
 }
