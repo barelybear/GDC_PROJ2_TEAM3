@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 public class Sword : Enemy
 {
     public float chargeSpeed = 7f;
@@ -10,6 +11,7 @@ public class Sword : Enemy
     private float attackTimer = 0f;
     private object spriteRenderer;
     public GameObject attackHitboxPrefab;
+    [SerializeField] private Slider HealthBar;
     
     private void Awake()
     {
@@ -21,6 +23,22 @@ public class Sword : Enemy
         }
         animator = GetComponent<Animator>();
     }
+    void Start()
+    {
+        // Khởi tạo thanh máu
+        if (HealthBar != null)
+        {
+            HealthBar.maxValue = health;
+            HealthBar.value    = health;
+        }
+        // Subscribe để cập nhật UI khi nhận damage
+        onHealthChanged += UpdateHealthUI;
+    }
+    void OnDestroy()
+    {
+        // Unsubscribe event
+        onHealthChanged -= UpdateHealthUI;
+    }
     protected override void Update()
     {
         base.Update();
@@ -30,6 +48,11 @@ public class Sword : Enemy
     {
         base.TakeDamage(damage);
         animator.SetTrigger("hit");
+    }
+    void UpdateHealthUI(float currentHealth)
+    {
+        if (HealthBar != null)
+            HealthBar.value = currentHealth;
     }
     protected override void MoveAI(float distanceToPlayer)
     {
