@@ -9,7 +9,7 @@ public class hitBox : MonoBehaviour
     {
         this.damage = damage;
         this.ownerTag = ownerTag;
-        Destroy(gameObject, 0.2f);
+        Destroy(gameObject, 1f);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
