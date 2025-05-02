@@ -7,12 +7,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button startButton;
     [SerializeField]  private Button guideButton;
     [SerializeField] private GameObject GuidePanel;
-    [SerializeField] private Button continueButton;
+    [SerializeField] private Button exitButton;
     void Start()
     {
         startButton.onClick.AddListener(StartGame);
         guideButton.onClick.AddListener(OpenGuidePanel);
-        continueButton.onClick.AddListener(ContinueGame);
+        exitButton.onClick.AddListener(QuitGame);
         GuidePanel.SetActive(false);
     }
 
@@ -33,9 +33,10 @@ public class MenuManager : MonoBehaviour
         GuidePanel.SetActive(!isActive);
     }
 
-    public void ContinueGame()
+    public void QuitGame()
     {
-        Debug.Log("Continue Game button clicked. Implement your logic here.");
+        Debug.Log("Quit game..."); // Khi bấm nút exit sẽ hiện dòng này trên console
+        Application.Quit();
     }
     
 }
