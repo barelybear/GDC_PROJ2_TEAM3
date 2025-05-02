@@ -10,6 +10,7 @@ public class Sword : Enemy
     private float attackTimer = 0f;
     private object spriteRenderer;
     public GameObject attackHitboxPrefab;
+    bool isAttack = false;
     
     private void Awake()
     {
@@ -28,6 +29,11 @@ public class Sword : Enemy
     }
     public override void TakeDamage(float damage)
     {
+        if(isAttack)
+        {
+            StopAllCoroutines();
+            isAttack = false;
+        }
         base.TakeDamage(damage);
         animator.SetTrigger("hit");
     }
@@ -53,11 +59,13 @@ public class Sword : Enemy
 
     public override void Attack()
     {
+        isAttack = true;
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer > attackRange) return;
         Debug.Log("Sword enemy swings sword!");
         animator.SetTrigger("attack");
         StartCoroutine(TriggerHitbox(damage, 4));
+        isAttack = false;
     }
     IEnumerator TriggerHitbox(float dmg, int count)
     {
@@ -67,7 +75,7 @@ public class Sword : Enemy
 
             hitBox script = hb.GetComponent<hitBox>();
             script.Init(dmg, tag);
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(1f);
         }
     }
     private void Flip(float direction)

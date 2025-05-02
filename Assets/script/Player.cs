@@ -18,6 +18,7 @@ public class Player : Entity
     public float attackCooldown = 1f;
     private float lastAttackTime = -10f;
     [SerializeField] private GameObject attackHitboxPrefab;
+    bool isAttack = false;
 
     void Start()
     {
@@ -93,16 +94,20 @@ public class Player : Entity
 
     void NormalAttack()
     {
+        isAttack = true;
         Debug.Log("Normal attack!");
         animator.SetTrigger("attack");
         StartCoroutine(TriggerHitbox(damage, 1));
+        isAttack = true;
     }
 
     void ComboAttack()
     {
+        isAttack = true;
         animator.SetTrigger("attack2");
         StartCoroutine(TriggerHitbox(damage, 2));
         lastAttackTime = Time.time;
+        isAttack = true;
     }
 
     IEnumerator TriggerHitbox(float dmg, int count)
@@ -120,7 +125,7 @@ public class Player : Entity
 
             hitBox script = hb.GetComponent<hitBox>();
             script.Init(dmg, tag);
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -161,6 +166,11 @@ public class Player : Entity
     }
     public override void TakeDamage(float damage)
     {
+        if (isAttack)
+        {
+            StopAllCoroutines();
+            isAttack = false;
+        }
         base.TakeDamage(damage);
         animator.SetTrigger("hit");
     }
