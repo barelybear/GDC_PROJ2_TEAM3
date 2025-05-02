@@ -498,7 +498,7 @@ MonoBehaviour:
   offsetMin: -2
   offsetMax: 2
   minions: {fileID: 8094359118723090557, guid: a80d5c8acf764484f9d576aa4913c39b, type: 3}
-  HealthBar: {fileID: 0}
+  HealthBar: {fileID: 5062316469141440653}
 --- !u!1 &7435070548385213086
 GameObject:
   m_ObjectHideFlags: 0

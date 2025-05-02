@@ -42149,7 +42149,7 @@ PrefabInstance:
       objectReference: {fileID: 1222605405}
     - target: {fileID: 8690801403840863886, guid: 75cf8fa327727e9438908034e06776ca, type: 3}
       propertyPath: jumpForce
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8690801403840863886, guid: 75cf8fa327727e9438908034e06776ca, type: 3}
       propertyPath: MenuButton
