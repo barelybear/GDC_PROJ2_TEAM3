@@ -206,7 +206,7 @@ public class Player : Entity
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("ground"))
+        if (collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Enemy"))
         {
             isGrounded = false;
         }
