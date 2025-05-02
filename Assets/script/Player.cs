@@ -26,6 +26,14 @@ public class Player : Entity
     [SerializeField] private GameObject GameOverPanel;
     [SerializeField]private Button MenuButton;
     [SerializeField]private Button RestartButton;
+    private bool isAttack = false;
+    public float coyoteTime       = 0.1f;  // cho phép nhảy dù vừa rời đất
+    public float jumpBufferTime   = 0.1f;  // lưu input nhảy trước khi chạm đất
+    public float fallMultiplier   = 2.5f;  // tăng tốc rơi
+    public float lowJumpMultiplier= 2f;    // nếu nhả phím sớm
+
+    private float coyoteCounter;
+    private float jumpBufferCounter;
 
     void Awake()
     {
@@ -65,9 +73,38 @@ public class Player : Entity
 
     void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.W) && isGrounded)
+        // if (Input.GetKeyDown(KeyCode.W) && isGrounded)
+        // {
+        //     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        // }
+        // 1) Cập nhật Coyote Time
+        if (isGrounded) coyoteCounter = coyoteTime;
+        else            coyoteCounter -= Time.deltaTime;
+
+        // 2) Cập nhật Jump Buffer
+        if (Input.GetKeyDown(KeyCode.W))
+            jumpBufferCounter = jumpBufferTime;
+        else
+            jumpBufferCounter -= Time.deltaTime;
+
+        // 3) Thực hiện nhảy khi cả 2 điều kiện đều thỏa
+        if (jumpBufferCounter > 0f && coyoteCounter > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            jumpBufferCounter = 0f;
+            coyoteCounter     = 0f;
+        }
+
+        // 4) Variable Jump Height: rơi nhanh hơn hoặc nhảy thấp nếu nhả phím
+        if (rb.linearVelocity.y < 0f)
+        {
+            // đang rơi
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1f) * Time.deltaTime;
+        }
+        else if (rb.linearVelocity.y > 0f && !Input.GetKey(KeyCode.W))
+        {
+            // đang nhảy nhưng nhả W → rơi nhanh hơn
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1f) * Time.deltaTime;
         }
     }
 
@@ -111,16 +148,20 @@ public class Player : Entity
 
     void NormalAttack()
     {
+        isAttack = true;
         Debug.Log("Normal attack!");
         animator.SetTrigger("attack");
         StartCoroutine(TriggerHitbox(damage, 1));
+        isAttack = false;
     }
 
     void ComboAttack()
     {
+        isAttack = true;
         animator.SetTrigger("attack2");
         StartCoroutine(TriggerHitbox(damage, 2));
         lastAttackTime = Time.time;
+        isAttack = false;
     }
 
     IEnumerator TriggerHitbox(float dmg, int count)
@@ -179,6 +220,11 @@ public class Player : Entity
     }
     public override void TakeDamage(float damage)
     {
+        if (isAttack)
+        {
+            StopAllCoroutines();
+            isAttack = false;
+        }
         base.TakeDamage(damage);
         animator.SetTrigger("hit");
     }
