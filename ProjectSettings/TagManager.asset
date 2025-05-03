@@ -6,6 +6,8 @@ TagManager:
   tags:
   - ground
   - Enemy
+  - Audo
+  - Audio
   layers:
   - Default
   - TransparentFX
