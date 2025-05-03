@@ -82,24 +82,26 @@ public class Sword : Enemy
 
     public override void Attack()
     {
-        isAttack = true;
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer > attackRange) return;
         Debug.Log("Sword enemy swings sword!");
         animator.SetTrigger("attack");
         StartCoroutine(TriggerHitbox(damage, 4));
-        isAttack = false;
+        
     }
     IEnumerator TriggerHitbox(float dmg, int count)
     {
+        isAttack = true;
         for (int i = 0; i < count; i++)
         {
+            if (!isAttack) break;
             GameObject hb = Instantiate(attackHitboxPrefab, transform.position, Quaternion.identity);
 
             hitBox script = hb.GetComponent<hitBox>();
             script.Init(dmg, tag);
             yield return new WaitForSeconds(0.2f);
         }
+        isAttack = false;
     }
     private void Flip(float direction)
     {
