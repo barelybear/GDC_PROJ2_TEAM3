@@ -12,6 +12,7 @@ public class Sword : Enemy
     private object spriteRenderer;
     public GameObject attackHitboxPrefab;
     [SerializeField] private Slider HealthBar;
+    private bool isAttack = false;
     
     private void Awake()
     {
@@ -46,6 +47,11 @@ public class Sword : Enemy
     }
     public override void TakeDamage(float damage)
     {
+        if(isAttack)
+        {
+            StopAllCoroutines();
+            isAttack = false;
+        }
         base.TakeDamage(damage);
         animator.SetTrigger("hit");
     }
@@ -76,11 +82,13 @@ public class Sword : Enemy
 
     public override void Attack()
     {
+        isAttack = true;
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer > attackRange) return;
         Debug.Log("Sword enemy swings sword!");
         animator.SetTrigger("attack");
         StartCoroutine(TriggerHitbox(damage, 4));
+        isAttack = false;
     }
     IEnumerator TriggerHitbox(float dmg, int count)
     {

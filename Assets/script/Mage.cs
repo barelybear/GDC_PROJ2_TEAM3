@@ -1,5 +1,6 @@
 using UnityEngine;
-
+using System.Collections;
+using UnityEngine.UI;
 public class Mage : Enemy
 {
     public float jumpForce = 5f;
@@ -10,6 +11,7 @@ public class Mage : Enemy
     public float offsetMin = -2f;
     public float offsetMax = 2f;
     public GameObject minions;
+    [SerializeField] private Slider HealthBar;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -19,6 +21,23 @@ public class Mage : Enemy
             if (playerObj != null) player = playerObj.transform;
         }
         animator = GetComponent<Animator>();
+    }
+
+    void Start()
+    {
+        // Khởi tạo thanh máu
+        if (HealthBar != null)
+        {
+            HealthBar.maxValue = health;
+            HealthBar.value    = health;
+        }
+        // Subscribe để cập nhật UI khi nhận damage
+        onHealthChanged += UpdateHealthUI;
+    }
+    void OnDestroy()
+    {
+        // Unsubscribe event
+        onHealthChanged -= UpdateHealthUI;
     }
 
     protected override void Update()
@@ -105,5 +124,11 @@ public class Mage : Enemy
     {
         base.TakeDamage(damage);
         animator.SetTrigger("hit");
+    }
+
+    void UpdateHealthUI(float currentHealth)
+    {
+        if (HealthBar != null)
+            HealthBar.value = currentHealth;
     }
 }
